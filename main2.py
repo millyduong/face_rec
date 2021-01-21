@@ -75,6 +75,10 @@ while(cap.isOpened()):
 
     result = frame.copy()
     final_boxes = []
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    fontScale = 0.5
+    color = (0, 255, 0) 
+    thickness = 2
     for i in indices:
         i = i[0]
         box = boxes[i]
@@ -105,7 +109,6 @@ while(cap.isOpened()):
 
     # Display text about number of detected faces on topleft corner
     # YOUR CODE HERE
-    
     cv2.putText(result,
                 f"Number of faces:{len(indices)}", (10, 50), font, fontScale + 1, color, thickness)
 
