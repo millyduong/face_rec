@@ -23,10 +23,6 @@ net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 
 IMG_WIDTH, IMG_HEIGHT = 416, 416
 
-# Define the codec and create VideoWriter object
-fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('output.avi',fourcc, 20.0, (640,480))
-
 total = 0
 while(cap.isOpened()):
     ret, frame = cap.read()
