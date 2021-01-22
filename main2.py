@@ -103,7 +103,7 @@ while(cap.isOpened()):
         cv2.rectangle(result, (left,top), ((left+width), (top+height)), (0,255,0), 2)
         
     #     image = cv2.rectangle(image, start_point, end_point, color, thickness) 
-        face = result[top:top+height,left:left+width]
+        face = frame[top:top+height,left:left+width]
             
             # Display text about confidence rate above each box
         text = f'{confidences[i]:.2f}'
