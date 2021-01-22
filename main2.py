@@ -1,14 +1,20 @@
-
 import numpy as np
 import cv2
-import imutils
+import argparse
 import matplotlib as plt
+import os
+
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-o", "--output", required=True,
+	help="path to output directory")
+args = vars(ap.parse_args())
 
 
 cap = cv2.VideoCapture(0)
 
-MODEL = "/Users/millyduong/Documents/face_rec/yolo/drive-download-20210121T071505Z-001/yolov3-face.cfg"
-WEIGHT = "/Users/millyduong/Documents/face_rec/yolo/drive-download-20210121T071505Z-001/yolov3-wider_16000.weights"
+MODEL = r"C:\Users\WIN\Desktop\face_rec\yolo\yolov3-face.cfg"
+WEIGHT = r"C:\Users\WIN\Desktop\face_rec\yolo\yolov3-wider_16000.weights"
 
 
 net = cv2.dnn.readNetFromDarknet(MODEL, WEIGHT)
@@ -21,6 +27,7 @@ IMG_WIDTH, IMG_HEIGHT = 416, 416
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
 out = cv2.VideoWriter('output.avi',fourcc, 20.0, (640,480))
 
+total = 0
 while(cap.isOpened()):
     ret, frame = cap.read()
    
@@ -75,6 +82,11 @@ while(cap.isOpened()):
 
     result = frame.copy()
     final_boxes = []
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    fontScale = 0.5
+    color = (0, 255, 0) 
+    thickness = 2
+    key = cv2.waitKey(1) & 0xFF
     for i in indices:
         i = i[0]
         box = boxes[i]
@@ -91,17 +103,20 @@ while(cap.isOpened()):
         cv2.rectangle(result, (left,top), ((left+width), (top+height)), (0,255,0), 2)
         
     #     image = cv2.rectangle(image, start_point, end_point, color, thickness) 
-
+        face = result[top:top+height,left:left+width]
             
             # Display text about confidence rate above each box
         text = f'{confidences[i]:.2f}'
         ### YOUR CODE HERE
-        font = cv2.FONT_HERSHEY_SIMPLEX
-        fontScale = 0.5
-        color = (0, 255, 0) 
-        thickness = 2
-        cv2.putText(result, text, (left,top-5), font, fontScale, color,    thickness)
 
+        cv2.putText(result, text, (left,top-5), font, fontScale, color,    thickness)
+        # if the `k` key was pressed, write the *original* frame to disk
+        # so we can later process it and use it for face recognition
+        if key == ord("k"):
+            p = os.path.sep.join([args["output"], "{}.png".format(
+                str(total).zfill(5))])
+            cv2.imwrite(p, face)
+            total += 1
 
     # Display text about number of detected faces on topleft corner
     # YOUR CODE HERE
@@ -109,15 +124,13 @@ while(cap.isOpened()):
     cv2.putText(result,
                 f"Number of faces:{len(indices)}", (10, 50), font, fontScale + 1, color, thickness)
 
-    cv2.imshow('face detection', result)
+    cv2.imshow("Frame", result)
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
-    
-
-# Release everything if job is finished
-# cap.release()
-# out.release()
-# cv2.destroyAllWindows()
+	# if the `q` key was pressed, break from the loop
+    if key == ord("q"):
+	    break
 
 
+print("[INFO] {} face images stored".format(total))
+print("[INFO] cleaning up...")
+cv2.destroyAllWindows()
