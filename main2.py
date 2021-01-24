@@ -8,13 +8,21 @@ import os
 ap = argparse.ArgumentParser()
 ap.add_argument("-o", "--output", required=True,
 	help="path to output directory")
+ap.add_argument("-d", "--device", required=False,
+	help="Device number")
 args = vars(ap.parse_args())
 
 
-cap = cv2.VideoCapture(0)
+DEVICE = int(args["device"]) or 0
+cap = cv2.VideoCapture(DEVICE)
 
-MODEL = r"C:\Users\WIN\Desktop\face_rec\yolo\yolov3-face.cfg"
-WEIGHT = r"C:\Users\WIN\Desktop\face_rec\yolo\yolov3-wider_16000.weights"
+# MODEL = r"C:\Users\WIN\Desktop\face_rec\yolo\yolov3-face.cfg"
+# WEIGHT = r"C:\Users\WIN\Desktop\face_rec\yolo\yolov3-wider_16000.weights"
+
+dirname = os.path.dirname(__file__)
+MODEL = os.path.join(dirname, 'yolo', 'yolov3-face.cfg')
+WEIGHT = os.path.join(dirname, 'yolo', 'yolov3-wider_16000.weights')
+
 
 
 net = cv2.dnn.readNetFromDarknet(MODEL, WEIGHT)
