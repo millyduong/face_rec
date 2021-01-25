@@ -16,8 +16,8 @@ args = vars(ap.parse_args())
 DEVICE = int(args["device"]) or 0
 cap = cv2.VideoCapture(DEVICE)
 
-# MODEL = r"C:\Users\WIN\Desktop\face_rec\yolo\yolov3-face.cfg"
-# WEIGHT = r"C:\Users\WIN\Desktop\face_rec\yolo\yolov3-wider_16000.weights"
+# MODEL = r"/Users/millyduong/Documents/yolo_face/face_rec/yolo/drive-download-20210121T071505Z-001/yolov3-face.cfg"
+# WEIGHT = r"/Users/millyduong/Documents/yolo_face/face_rec/yolo/drive-download-20210121T071505Z-001/yolov3-wider_16000.weights"
 
 dirname = os.path.dirname(__file__)
 MODEL = os.path.join(dirname, 'yolo', 'yolov3-face.cfg')
